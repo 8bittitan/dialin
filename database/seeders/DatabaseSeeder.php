@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\Family;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,11 +15,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        $family = Family::factory()->create([
+            'name' => 'Jankowski Family',
+        ]);
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        User::factory()->parent()->create([
+            'name' => 'Paul Jankowski',
+            'family_id' => $family->id,
+            'email' => 'PJankowski25@gmail.com',
+        ]);
+
+        User::factory()->child()->create([
+            'name' => 'Payton Jankowski',
+            'family_id' => $family->id,
+            'email' => null,
+            'password' => null,
+        ]);
     }
 }

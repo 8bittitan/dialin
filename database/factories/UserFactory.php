@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\FamilyUserRole;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -39,6 +40,20 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
+        ]);
+    }
+
+    public function parent(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => FamilyUserRole::Parent->value,
+        ]);
+    }
+
+    public function child(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => FamilyUserRole::Child->value,
         ]);
     }
 }

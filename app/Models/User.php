@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\FamilyUserRole;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -41,5 +43,36 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'type' => FamilyUserRole::class,
     ];
+
+    public function family(): BelongsTo
+    {
+        return $this->belongsTo(Family::class);
+    }
+
+    public function settings(): HasMany
+    {
+        return $this->HasMany(Setting::class);
+    }
+
+    public function children(): ?HasMany
+    {
+        return $this->family ? $this->family->children : null;
+    }
+
+    public function entries(): HasMany
+    {
+        return $this->hasMany(Entry::class);
+    }
+
+    public function isParent(): bool
+    {
+        return $this->role === FamilyUserRole::Parent;
+    }
+
+    public function isChild(): bool
+    {
+        return $this->role === FamilyUserRole::Child;
+    }
 }
